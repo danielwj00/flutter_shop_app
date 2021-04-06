@@ -22,8 +22,9 @@ class OrderItem {
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
   final String authToken;
+  final String userId;
 
-  Orders(this.authToken, this._orders);
+  Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
@@ -31,7 +32,7 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAndSetOrders() async {
     const url = 'flutter-shop-app-40e7f-default-rtdb.firebaseio.com';
-    final Uri uri = Uri.https(url, 'orders.json', {
+    final Uri uri = Uri.https(url, 'orders/$userId.json', {
       'auth': authToken,
     });
     final response = await http.get(uri);
@@ -63,7 +64,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     const url = 'flutter-shop-app-40e7f-default-rtdb.firebaseio.com';
-    final Uri uri = Uri.https(url, 'orders.json', {
+    final Uri uri = Uri.https(url, 'orders/$userId.json', {
       'auth': authToken,
     });
     final timestamp = DateTime.now();

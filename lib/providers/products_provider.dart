@@ -75,13 +75,18 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString = filterByUser
+        ? {
+            'auth': authToken,
+            'orderBy': '"creatorId"',
+            'equalTo': '"$userId"',
+          }
+        : {
+            'auth': authToken,
+          };
     const url = 'flutter-shop-app-40e7f-default-rtdb.firebaseio.com';
-    final Uri uri = Uri.https(url, 'products.json', {
-      'auth': authToken,
-      'orderBy': '"creatorId"',
-      'equalTo': '"$userId"',
-    });
+    final Uri uri = Uri.https(url, 'products.json', filterString);
     // final Uri uri = Uri.https(url,
     //     'products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userId"');
     final Uri uriFavorite = Uri.https(url, 'userFavorites/$userId.json', {
